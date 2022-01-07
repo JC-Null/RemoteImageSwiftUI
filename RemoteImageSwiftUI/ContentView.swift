@@ -1,9 +1,6 @@
-//
-//  ContentView.swift
-//  RemoteImageSwiftUI
-//
-//  Created by John Canzoneri on 1/2/22.
-//
+//Exploring AsyncImage Abilities of SwiftUI
+//used various steps to ramp how difficult it can get
+//used various animations to test the app
 
 import SwiftUI
 
@@ -44,9 +41,36 @@ struct ContentView: View {
 //        }
 //        .padding(40)
     // MARK: -- 4 . Phase
-        ASYNCIMAGE)URL: URL(string: imageURL)) { phase in
-            //success: the image sucessfully loaded.
+//        AsyncImage(url: URL(string: imageURL)) { phase in
+//            //success: the image sucessfully loaded.
+//            //Failure: The image failed to load with an error.
+//            //empty: no image is loaded
+//
+//            if let image = phase.image {
+//                image.imageModifier()
+//            } else if phase.error != nil {
+//                Image(systemName: "ant.circle.fill").iconModifier()
+//            } else {
+//                Image(systemName: "photo.circle.fill").iconModifier()
+//            }
+//        }
+//                        .padding(40)
+        //MARK: --5. ANIMATION
+        AsyncImage(url: URL(string: imageURL), transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0.25))) { phase in
+            switch phase {
+            case .success(let image):
+                image.imageModifier()
+                    //.transition(.move(edge: .bottom))
+                    .transition(.scale)
+            case .failure(_):
+                Image(systemName: "ant.circle.fill").iconModifier()
+            case .empty:
+                Image(systemName: "photo.circle.fill").iconModifier()
+            @unknown default:
+                ProgressView()
+            }
         }
+        .padding(40)
     }
 }
 
